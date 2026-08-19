@@ -206,7 +206,7 @@ class AaMainFragment : BaseFragment<FragmentAaMainBinding>(FragmentAaMainBinding
     private var displaySurface: Surface? = null
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         displaySurface?.release()
-        displaySurface = Surface(surfaceTexture = surface)
+        displaySurface = Surface(surface)
         CoreApi.setDisplaySurface(displaySurface)
     }
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {}
