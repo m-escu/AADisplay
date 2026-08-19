@@ -11,7 +11,7 @@
             app:defaultValue="true"
             app:key="AutoOpen"
             app:title="Auto Open"
-            app:summary="Automatically open the app after Android Auto connects"
+            app:summary="Launch the preferred app automatically when Android Auto connects"
             app:iconSpaceReserved="false"/>
 
         <EditTextPreference
@@ -20,59 +20,59 @@
             app:defaultValue="com.wow.carlauncher.mini"
             app:key="LauncherPackage"
             app:title="Preferred Package Name"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="Package name of the app to show on the car display (e.g. launcher or maps). Default: com.wow.carlauncher.mini"/>
 
         <EditTextPreference
             android:inputType="number"
             app:key="AndroidAutoDpi"
             app:title="AndroidAutoDpi"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" 
+            app:summary="Overrides the DPI reported to Android Auto. 0 = use system default."/>
 
         <EditTextPreference
             android:inputType="number"
             app:key="VirtualDisplayDpi"
             app:title="VirtualDisplayDpi"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" 
+            app:summary="DPI of the virtual display apps render into. 0 = use system default."/>
 
         <EditTextPreference
             android:inputType="number"
             app:defaultValue="180"
             app:key="DelayDestroyTime"
             app:title="Delayed Destroy Time"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false" />
+            app:iconSpaceReserved="false" 
+            app:summary="Seconds to keep the virtual display alive after AA disconnects (prevents restart churn)."/>
 
         <rikka.material.preference.MaterialSwitchPreference
             app:defaultValue="false"
             app:key="ScreenOffReplaceLockScreen"
             app:title="Screen Off Only"
-            app:summary="Power button only turns screen off"
+            app:summary="Power button only turns the screen off instead of locking the device"
             app:iconSpaceReserved="false"/>
 
         <rikka.material.preference.MaterialSwitchPreference
             app:defaultValue="true"
             app:key="CloseLauncherDashboard"
             app:title="Block AA split-screen switching"
-            app:summary=""
+            app:summary="Prevent Android Auto from switching back to its own dashboard / split-screen"
             app:iconSpaceReserved="false"/>
 
         <rikka.material.preference.MaterialSwitchPreference
             app:defaultValue="true"
             app:key="ForceRightAngle"
             app:title="Force Right Angle"
-            app:summary=""
+            app:summary="Force 90-degree landscape orientation on the virtual display"
             app:iconSpaceReserved="false"/>
 
         <ListPreference
             app:key="DisplayImePolicy"
             app:defaultValue="1"
-            app:title="ImePolicy"
+            app:title="IME Display"
+            app:summary="Which screen shows the keyboard: Virtual Display or Main Display"
             app:entries="@array/ime_policy_keys"
             app:entryValues="@array/ime_policy_values"
-            app:useSimpleSummaryProvider="true"
             app:iconSpaceReserved="false"/>
 
         <EditTextPreference
@@ -81,8 +81,8 @@
             app:defaultValue="am start com.miui.voiceassist/com.xiaomi.voiceassistant.CTAAlertActivity"
             app:key="VoiceAssistShell"
             app:title="Voice Assistant Shell"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="Shell command (run as root) executed when the voice assistant is triggered."/>
 
     </PreferenceCategory>
 
@@ -95,22 +95,22 @@
             android:inputType="textMultiLine"
             app:key="CreateVirtualDisplayBefore"
             app:title="Run before creating virtual display"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="Shell commands (one per line, run as root) before the virtual display is created."/>
 
         <EditTextPreference
             android:inputType="textMultiLine"
             app:key="DestroyVirtualDisplayAfter"
             app:title="Run after destroying virtual display"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="Shell commands (one per line, run as root) after the virtual display is destroyed."/>
 
     </PreferenceCategory>
 
     <PreferenceCategory
         app:key="CategoryPhysicalBtn"
         app:title="Physical Buttons"
-        app:summary="TODO"
+        app:summary="Configure steering wheel / hardware button actions"
         app:iconSpaceReserved="false">
     </PreferenceCategory>
 
@@ -125,15 +125,15 @@
             android:inputType="textMultiLine"
             app:key="ComGoogleAndroidProjectionGearheadProps"
             app:title="projection.gearhead] properties"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="System properties (key=value per line) set for com.google.android.projection.gearhead to spoof the device for AA."/>
 
         <EditTextPreference
             android:inputType="textMultiLine"
             app:key="ComGoogleAndroidGmsCarProps"
             app:title="gms.car] properties"
-            app:useSimpleSummaryProvider="true"
-            app:iconSpaceReserved="false"/>
+            app:iconSpaceReserved="false"
+            app:summary="System properties (key=value per line) set for com.google.android.gms to spoof the device for AA."/>
 
     </PreferenceCategory>
 

@@ -107,6 +107,7 @@ dependencies {
     implementation("com.github.topjohnwu.libsu:core:5.2.0")
     implementation("org.luckypray:dexkit:2.0.0-rc3")
 //    implementation("com.github.martoreto:aauto-sdk:v4.7")
+    // vendored copy of com.github.martoreto:aauto-sdk:v4.7 (modified)
     implementation(files("./libs/aauto.aar"))
 
     //lifecycle

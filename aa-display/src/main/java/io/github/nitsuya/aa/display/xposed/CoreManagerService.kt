@@ -52,58 +52,10 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
 
         @SuppressLint("UnspecifiedRegisterReceiverFlag")
         fun systemReady() {
-//            systemContext.registerReceiver(CoreBroadcastReceiver, IntentFilter().apply {
-//                addAction("com.google.android.gearhead.ASSISTANT_STATE_CHANGED")
-//                addAction("com.google.android.apps.auto.carservice.service.impl.NEARBY_ACTION_STOP_PROJECTION")
-//                addAction("com.google.android.gms.car.STARTUP_LATENCY_MEASUREMENT_EVENT")
-//                addAction("com.google.android.gms.car.FRX")
-//                addAction("com.google.android.gms.car.DISCONNECTED")
-//                addAction("com.google.android.gms.car.BIND_CAR_INPUT")
-//                addAction("com.google.android.gms.car.PROJECTION_STARTED")
-//                addAction("com.google.android.gms.car.PROJECTION_ENDED")
-//                addAction("com.google.android.gms.car.FIRST_ACTIVITY")
-//            })
 
             TipUtil.init(systemContext, "[AADisplay] ")
             Instances.init(systemContext)
 
-//            runIO {
-//                try{
-//                    com.google.android.gms.car.a::class.java.invokeStaticMethod("b", args(systemContext), argTypes(Context::class.java))
-//                    val classDynamicApiFactory = com.google.android.gms.car.a::class.java.field("a", true, Class::class.java).get(null)
-//                    val instance = PathClassLoader(
-//                        "/data/local/car_sdk_impl/sdk_impl.jar",
-//                        CarSdkClassLoader(this.javaClass.classLoader)
-//                    )
-//                    instance.loadClass("com.google.android.gms.car.internal.GmsVersionChecker").invokeStaticMethod("disableGmsVersionChecks")
-//                    instance.loadClass("com.google.android.gms.car.CarVersionUtils").invokeStaticMethod("versionCheck")
-//                    classDynamicApiFactory.field("instance", true, ClassLoader::class.java).set(null, instance)
-//                    val car = Car.createCar(systemContext, object: CarConnectionCallback(){
-//                        override fun onConnected(car: Car) {
-//                            log(TAG, "AA connected")
-//                            val carManager = car.getCarManager("car_1p")
-//                            Companion.instance?.showToast("AA carManager: ${carManager!=null} -> ${carManager?.javaClass?.name}")
-//                            log(TAG, "AA carManager: ${carManager!=null} -> ${carManager?.javaClass?.name}") //CarFirstPartyManager
-//                            Companion.instance?.showToast("AA connected")
-//                        }
-//                        override fun onDisconnected(car: Car) {
-//                            log(TAG, "AA disconnected")
-//                            Companion.instance?.showToast("AA disconnected")
-//                        }
-//                    }).apply {
-//                        connect()
-//                        log(TAG, "AA initialization complete")
-//                        Companion.instance?.showToast("AA initialization complete")
-//                    }
-//                    if(car == null){
-//                        Companion.instance?.showToast("AA initialization failed")
-//                        log(TAG, "AA initialization failed")
-//                    }
-//                } catch (e: Throwable){
-//                    Companion.instance?.showToast("AA initialization exception:" + e.message)
-//                    log(TAG, "AA initialization exception", e)
-//                }
-//            }
         }
 
         fun getDisplayId(): Int{
@@ -141,7 +93,7 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
             }
             config?.apply {
                 reload()
-                log(TAG, "config: ${this.all.map { "${it.key}=${it.value}[${it.value?.javaClass?.name}]" }.joinToString() }")
+                if (BuildConfig.DEBUG) log(TAG, "config: ${this.all.map { "${it.key}=${it.value}[${it.value?.javaClass?.name}]" }.joinToString() }")
             }
             AaVirtualDisplayAdapter(systemContext, config){
                 mAaVirtualDisplayAdapter = this
@@ -227,44 +179,6 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
         mAaVirtualDisplayAdapter?.onTouch(event)
     }
 
-//    private var repairDownTime: Long = Long.MIN_VALUE
-//    fun touch2(event: MotionEvent, ratio: Float, repairDownTime: Long) {
-//        mAaVirtualDisplayAdapter?.run {
-//            val pointerCoords: Array<MotionEvent.PointerCoords?> = arrayOfNulls(event.pointerCount)
-//            val pointerProperties: Array<MotionEvent.PointerProperties?> = arrayOfNulls(event.pointerCount)
-//            val oldCoords = MotionEvent.PointerCoords()
-//            for (i in 0 until event.pointerCount) {
-//                val pointerProperty = MotionEvent.PointerProperties()
-//                event.getPointerCoords(i, oldCoords)
-//                event.getPointerProperties(i, pointerProperty)
-//                pointerCoords[i] = MotionEvent.PointerCoords()
-//                pointerCoords[i]!!.apply {
-//                    x = if(ratio == 1f) oldCoords.x else oldCoords.x / ratio
-//                    y = if(ratio == 1f) oldCoords.y else oldCoords.y / ratio
-//                }
-//                pointerProperties[i] = pointerProperty
-//            }
-//
-//            val newEvent = MotionEvent.obtain(
-//                if(repairDownTime == Long.MIN_VALUE) event.downTime else repairDownTime,
-//                if(repairDownTime == Long.MIN_VALUE) event.eventTime else SystemClock.uptimeMillis(),
-//                event.action,
-//                event.pointerCount,
-//                pointerProperties,
-//                pointerCoords,
-//                event.metaState,
-//                event.buttonState,
-//                event.xPrecision,
-//                event.yPrecision,
-//                event.deviceId,
-//                event.edgeFlags,
-//                event.source,
-//                event.flags
-//            )
-//            onTouch(event)
-//            newEvent.recycle()
-//        }
-//    }
 
     override fun toggleDisplayPower() {
         runIO {
@@ -298,60 +212,6 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
 
     @SuppressLint("RestrictedApi")
     override fun testCode(action: String){
-//        runMain {
-//            try {
-//                when (action) {
-//                    "displayPowerMode" -> {
-//                        try{
-//                            val internalDisplayToken = SurfaceControlHidden.getInternalDisplayToken()
-//                            SurfaceControlHidden.setDisplayPowerMode(internalDisplayToken, 0) // POWER_MODE_OFF-0  POWER_MODE_NORMAL-2
-//                        } catch (e: Throwable){
-//                            log(TAG, "DisplayToken", e)
-//                        }
-//                    }
-//                    "aaSdk" -> {
-//                        try{
-//                            com.google.android.gms.car.a::class.java.invokeStaticMethod("b", args(systemContext), argTypes(Context::class.java))
-//                            val classDynamicApiFactory = com.google.android.gms.car.a::class.java.field("a", true, Class::class.java).get(null)
-//                            val instance = PathClassLoader(
-//                                "/data/local/car_sdk_impl/sdk_impl.jar",
-//                                CarSdkClassLoader(this.javaClass.classLoader)
-//                            )
-//                            classDynamicApiFactory.field("instance", true, ClassLoader::class.java).set(null, instance)
-//                            instance.loadClass("com.google.android.gms.car.internal.GmsVersionChecker").invokeStaticMethod("disableGmsVersionChecks")
-//                            instance.loadClass("com.google.android.gms.car.CarVersionUtils").invokeStaticMethod("versionCheck")
-//                            val car = Car.createCar(systemContext, object: CarConnectionCallback(){
-//                                override fun onConnected(car: Car) {
-//                                    log(TAG, "AA connected")
-//                                    TipUtil.showToast("AA connected")
-////                                    val carManager = car.getCarManager("car_1p")
-////                                    showToast("AA carManager: ${carManager!=null} -> ${carManager?.javaClass?.name}")
-////                                    log(TAG, "AA carManager: ${carManager!=null} -> ${carManager?.javaClass?.name}") //CarFirstPartyManager
-//                                }
-//                                override fun onDisconnected(car: Car) {
-//                                    log(TAG, "AA disconnected")
-//                                    TipUtil.showToast("AA disconnected")
-//                                }
-//                            }).apply {
-//                                connect()
-//                                log(TAG, "AA initialization complete")
-//                                TipUtil.showToast("AA initialization complete")
-//                            }
-//                            if(car == null){
-//                                TipUtil.showToast("AA initialization failed")
-//                                log(TAG, "AA initialization failed")
-//                            }
-//                        } catch (e: Throwable){
-//                            TipUtil.showToast("AA initialization exception:" + e.message)
-//                            log(TAG, "AA initialization exception", e)
-//                        }
-//                    }
-//                }
-//            }catch (e: Throwable){
-//                TipUtil.showToast("TestCode[$action]: ${e.message}")
-//                log(TAG, "TestCode[$action]:", e)
-//            }
-//        }
     }
 
     override fun toast(msg: String){
