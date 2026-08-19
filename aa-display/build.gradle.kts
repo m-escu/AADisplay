@@ -27,18 +27,6 @@ android {
             )
         )
     }
-    signingConfigs {
-        create("release") {
-            storeFile = file("../key.jks")
-            storePassword = System.getenv("KEY_ANDROID")
-            keyAlias = "key0"
-            keyPassword = System.getenv("KEY_ANDROID")
-            enableV1Signing = false
-            enableV2Signing = false
-            enableV3Signing = true
-            enableV4Signing = true
-        }
-    }
     buildTypes {
         getByName("release") {
             isMinifyEnabled = true
@@ -47,7 +35,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             sourceSets.getByName("main").java.srcDir(File("build/generated/ksp/release/kotlin"))
         }
         getByName("debug") {
@@ -57,7 +45,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
 //            proguardFiles(
 //                getDefaultProguardFile("proguard-android-optimize.txt"),
 //                "proguard-rules.pro"
