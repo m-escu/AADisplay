@@ -146,7 +146,7 @@ class AaControlService: MediaBrowserServiceCompat() {
 
     override fun onCreate() {
         super.onCreate()
-        config = this.getSharedPreferences(AADisplayConfig.ConfigName, MODE_WORLD_READABLE)
+        config = this.getSharedPreferences(AADisplayConfig.ConfigName, MODE_PRIVATE)
 
         session = MediaSessionCompat(this, "AaControlService").apply {
             setMediaButtonReceiver(

@@ -9,7 +9,7 @@ import android.support.car.CarConnectionCallback
 import android.view.*
 import androidx.core.content.ContextCompat
 import androidx.core.view.InputDeviceCompat
-import androidx.media.MediaBrowserServiceCompat
+import android.content.Context
 import com.github.kyuubiran.ezxhelper.utils.tryOrNull
 import com.google.android.gms.car.CarFirstPartyManager
 import com.topjohnwu.superuser.Shell
@@ -125,7 +125,7 @@ class AaMainFragment : BaseFragment<FragmentAaMainBinding>(FragmentAaMainBinding
     }
 
     override fun initViews() {
-        config = this.requireContext().getSharedPreferences(AADisplayConfig.ConfigName, MediaBrowserServiceCompat.MODE_WORLD_READABLE)
+        config = this.requireContext().getSharedPreferences(AADisplayConfig.ConfigName, Context.MODE_PRIVATE)
         baseBinding.tvDisplay.post  {
             CoreApi.onCreateDisplay(
                 baseBinding.tvDisplay.width,

@@ -88,7 +88,9 @@ class AaVirtualDisplayAdapter(
     }
 
     fun setSurface(surface: Surface?){
-        mVirtualDisplay.surface = surface
+        if (::mVirtualDisplay.isInitialized) {
+            mVirtualDisplay.surface = surface
+        }
     }
 
     @SuppressLint("WrongConstant")
@@ -113,6 +115,10 @@ class AaVirtualDisplayAdapter(
             )
         } finally {
             Binder.restoreCallingIdentity(indent)
+        }
+        if (mVirtualDisplay == null) {
+            log(TAG, "createVirtualDisplay returned null")
+            return
         }
         mDisplayId = mVirtualDisplay.display.displayId
         mDensityDpi = densityDpi
@@ -152,6 +158,7 @@ class AaVirtualDisplayAdapter(
     }
 
     fun onReconnected(width: Int, height: Int, densityDpi: Int){
+        if (!::mVirtualDisplay.isInitialized) return
         mVirtualDisplay.resize(width, height, densityDpi)
         mDensityDpi = densityDpi
     }
@@ -169,10 +176,14 @@ class AaVirtualDisplayAdapter(
             }
         }
         tryOrNull { CoreManagerService.systemContext.unbindService(mServiceConnection) }
-        mSurfaceControls.values.forEach { it.release() }
+        mSurfaceControls.values.forEach { tryOrNull { it.release() } }
         mSurfaceControls.clear()
-        tryOrNull { mDisplayWindowManager.removeView(mForceView) }
-        mVirtualDisplay.release()
+        if (::mDisplayWindowManager.isInitialized) {
+            tryOrNull { mDisplayWindowManager.removeView(mForceView) }
+        }
+        if (::mVirtualDisplay.isInitialized) {
+            tryOrNull { mVirtualDisplay.release() }
+        }
         mDisplayId = Display.INVALID_DISPLAY
         mDensityDpi = 0
         mShellManager?.destroyVirtualDisplayAfter()

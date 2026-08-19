@@ -21,7 +21,7 @@ class SettingsActivity : BaseActivity<ActivitySettingsBinding>(ActivitySettingsB
             requireContext().theme.applyStyle(rikka.material.preference.R.style.ThemeOverlay_Rikka_Material3_Preference, true)
             preferenceManager.apply {
                 sharedPreferencesName = AADisplayConfig.ConfigName
-                sharedPreferencesMode = MODE_WORLD_READABLE
+                sharedPreferencesMode = MODE_PRIVATE
             }
             setPreferencesFromResource(R.xml.pref_aadisplay_config, rootKey)
         }

@@ -37,25 +37,41 @@ object AndroidHook : BaseHook() {
             }
         }
 
-        var activityManagerServiceConstructorHook: List<XC_MethodHook.Unhook> = emptyList()
-        activityManagerServiceConstructorHook = findAllConstructors("com.android.server.am.ActivityManagerService") {
+        runCatching {
+            var activityManagerServiceConstructorHook: List<XC_MethodHook.Unhook> = emptyList()
+            activityManagerServiceConstructorHook = findAllConstructors("com.android.server.am.ActivityManagerService") {
             parameterTypes[0] == Context::class.java
         }.hookAfter {
             activityManagerServiceConstructorHook.forEach { hook -> hook.unhook() }
-            CoreManagerService.systemContext = it.thisObject.getObjectAs("mUiContext")
+            runCatching {
+                CoreManagerService.systemContext = it.thisObject.getObjectAs("mUiContext")
+            }.onFailure { e ->
+                log(tagName, "Failed to get systemUiContext", e)
+            }
             log(tagName, "get systemUiContext")
         }.also {
             if (it.isEmpty())
                 log(tagName, "no constructor with parameterTypes[0] == Context found")
         }
+        }.onFailure {
+            log(tagName, "Failed to hook ActivityManagerService constructor", it)
+        }
 
+        runCatching {
         var activityManagerServiceSystemReadyHook: XC_MethodHook.Unhook? = null
         activityManagerServiceSystemReadyHook = findMethod("com.android.server.am.ActivityManagerService") {
             name == "systemReady"
         }.hookAfter {
             activityManagerServiceSystemReadyHook?.unhook()
-            CoreManagerService.systemReady()
+            runCatching {
+                CoreManagerService.systemReady()
+            }.onFailure { e ->
+                log(tagName, "systemReady failed", e)
+            }
             log(tagName, "system ready")
+        }
+        }.onFailure {
+            log(tagName, "Failed to hook ActivityManagerService.systemReady", it)
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {//10+
@@ -63,18 +79,22 @@ object AndroidHook : BaseHook() {
                 "com.android.server.wm.ActivityTaskSupervisor"
             else  //10+
                 "com.android.server.wm.ActivityStackSupervisor"
-            findMethod(className){
-                name == "isCallerAllowedToLaunchOnDisplay"
-                && parameterCount == 4
-                && parameterTypes[0] == Int::class.javaPrimitiveType //callingPid
-                && parameterTypes[1] == Int::class.javaPrimitiveType //callingUid
-                && parameterTypes[2] == Int::class.javaPrimitiveType //launchDisplayId
-                && parameterTypes[3] == ActivityInfo::class.java
-            }.hookAfter { param ->
-                if((param.result as Boolean).not() && param.args[2] == CoreManagerService.getDisplayId()){
-                    param.result = true
-                    log(tagName,"hook isCallerAllowedToLaunchOnDisplay success")
+            runCatching {
+                findMethod(className){
+                    name == "isCallerAllowedToLaunchOnDisplay"
+                    && parameterCount == 4
+                    && parameterTypes[0] == Int::class.javaPrimitiveType //callingPid
+                    && parameterTypes[1] == Int::class.javaPrimitiveType //callingUid
+                    && parameterTypes[2] == Int::class.javaPrimitiveType //launchDisplayId
+                    && parameterTypes[3] == ActivityInfo::class.java
+                }.hookAfter { param ->
+                    if((param.result as Boolean).not() && param.args[2] == CoreManagerService.getDisplayId()){
+                        param.result = true
+                        log(tagName,"hook isCallerAllowedToLaunchOnDisplay success")
+                    }
                 }
+            }.onFailure {
+                log(tagName, "Failed to hook isCallerAllowedToLaunchOnDisplay", it)
             }
         }
 
