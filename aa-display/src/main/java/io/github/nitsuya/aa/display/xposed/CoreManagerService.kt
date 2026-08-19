@@ -224,10 +224,7 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
     }
 
     override fun touch(event: MotionEvent) {
-        runBlocking(Dispatchers.IO) {
-//        runMain {
-            mAaVirtualDisplayAdapter?.onTouch(event)
-        }
+        mAaVirtualDisplayAdapter?.onTouch(event)
     }
 
 //    private var repairDownTime: Long = Long.MIN_VALUE

@@ -203,10 +203,17 @@ class AaMainFragment : BaseFragment<FragmentAaMainBinding>(FragmentAaMainBinding
         car = null
     }
 
+    private var displaySurface: Surface? = null
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
-        CoreApi.setDisplaySurface(Surface(surface))
+        displaySurface?.release()
+        displaySurface = Surface(surfaceTexture = surface)
+        CoreApi.setDisplaySurface(displaySurface)
     }
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {}
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean  = false
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
+        displaySurface?.release()
+        displaySurface = null
+        return true
+    }
     override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {}
 }

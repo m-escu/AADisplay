@@ -80,6 +80,7 @@ class DisplayWindow(
 
     private val isSupportInteractive = RomUtil.isMiui()
     private var interactiveMonitor = object: BroadcastReceiver(){
+        private var receiverRegistered = false
         val monitor by lazy {
             Instances.powerManagerHidden.newWakeLock(
                         PowerManager.SCREEN_BRIGHT_WAKE_LOCK
@@ -115,7 +116,10 @@ class DisplayWindow(
             if(mScreenOffReplaceLockScreen){
                 AndroidHook.Power.hook()
             } else if(isSupportInteractive){
-                mContext.registerReceiver(this, addAction(IntentFilter()))
+                if (!receiverRegistered) {
+                    mContext.registerReceiver(this, addAction(IntentFilter()))
+                    receiverRegistered = true
+                }
                 onReceive(mContext, if(Instances.powerManager.isInteractive) Intent.ACTION_SCREEN_ON else Intent.ACTION_SCREEN_OFF)
             } else {
                 if (!monitor.isHeld) {
@@ -128,7 +132,10 @@ class DisplayWindow(
             if(mScreenOffReplaceLockScreen){
                 AndroidHook.Power.unHook()
             } else if(isSupportInteractive){
-                mContext.unregisterReceiver(this)
+                if (receiverRegistered) {
+                    tryOrNull { mContext.unregisterReceiver(this) }
+                    receiverRegistered = false
+                }
                 onReceive(mContext, Intent.ACTION_SCREEN_ON)
             } else {
                 monitor.release()

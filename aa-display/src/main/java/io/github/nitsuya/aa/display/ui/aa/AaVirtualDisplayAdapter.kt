@@ -175,6 +175,7 @@ class AaVirtualDisplayAdapter(
                 }
             }
         }
+        mShellManager?.let { tryOrNull { it.destroyVirtualDisplayAfter() } }
         tryOrNull { CoreManagerService.systemContext.unbindService(mServiceConnection) }
         mSurfaceControls.values.forEach { tryOrNull { it.release() } }
         mSurfaceControls.clear()
@@ -186,7 +187,6 @@ class AaVirtualDisplayAdapter(
         }
         mDisplayId = Display.INVALID_DISPLAY
         mDensityDpi = 0
-        mShellManager?.destroyVirtualDisplayAfter()
     }
 
     fun onTouch(event: MotionEvent) = injectInputEvent(event)
