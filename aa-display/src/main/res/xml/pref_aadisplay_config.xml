@@ -31,7 +31,7 @@
             app:key="LauncherPackage"
             app:title="Preferred Package Name"
             app:iconSpaceReserved="false"
-            app:summary="Package name of the app to show on the car display (e.g. launcher or maps). Default: com.wow.carlauncher.mini"/>
+            app:summary="Package name of the app to show on the car display (e.g. launcher or maps). Default: com.jamal2367.minicarlauncher"/>
 
         <EditTextPreference
             android:inputType="number"
