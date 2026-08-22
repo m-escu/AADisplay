@@ -28,6 +28,13 @@ class Application: android.app.Application() {
     override fun onCreate() {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
+        // ensure prefs are readable by system_server (XSharedPreferences) after updates
+        tryOrNull {
+            Shell.cmd(
+                "chmod 771 /data/data/$packageName/shared_prefs",
+                "chmod 664 /data/data/$packageName/shared_prefs/aadisplay_config.xml"
+            ).submit()
+        }
     }
 
     override fun attachBaseContext(base: Context?) {

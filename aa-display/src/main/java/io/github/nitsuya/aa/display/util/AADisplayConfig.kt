@@ -13,7 +13,7 @@ sealed class AADisplayConfig<T>(val key: String) {
 
     abstract fun get(config: SharedPreferences?): T
 
-    object LauncherPackage: StringConfig("LauncherPackage", "com.wow.carlauncher.mini")
+    object LauncherPackage: StringConfig("LauncherPackage", "com.jamal2367.minicarlauncher")
     object AutoOpen: BooleanConfig("AutoOpen", true)
     object VirtualDisplayDpi: IntConfig("VirtualDisplayDpi", 0)
     object AndroidAutoDpi: IntConfig("AndroidAutoDpi", 0)

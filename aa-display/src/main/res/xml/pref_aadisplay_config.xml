@@ -27,7 +27,7 @@
         <EditTextPreference
             android:inputType="text"
             app:singleLineTitle="true"
-            app:defaultValue="com.wow.carlauncher.mini"
+            app:defaultValue="com.jamal2367.minicarlauncher"
             app:key="LauncherPackage"
             app:title="Preferred Package Name"
             app:iconSpaceReserved="false"
