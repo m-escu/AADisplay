@@ -5,33 +5,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="#B3000000">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_recent_task_left"
-        android:name="io.github.nitsuya.aa.display.ui.aa.fragment.AaRecentTaskFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".ui.aa.fragment.AaRecentTaskFragment"
-        tools:listitem="@layout/recent_task" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="8dp">
 
-    <View
-        android:layout_width="1dp"
-        android:layout_height="match_parent"
-        android:background="?colorOnPrimaryContainer"
-        />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_home"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"
+            android:autoSizeTextType="uniform" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_close"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="Close"
+            android:autoSizeTextType="uniform" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recent_task_left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/recent_task" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?colorOnPrimaryContainer" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_recent_task_right"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:layoutManager="LinearLayoutManager"
+            tools:listitem="@layout/recent_task" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="8dp"
+        android:paddingTop="8dp"
+        android:text="All apps"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_recent_task_right"
-        android:name="io.github.nitsuya.aa.display.ui.aa.fragment.AaRecentTaskFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="2"
-        app:layoutManager="LinearLayoutManager"
-        tools:context=".ui.aa.fragment.AaRecentTaskFragment"
-        tools:listitem="@layout/recent_task" />
+        android:id="@+id/rv_all_apps"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+        app:spanCount="6"
+        tools:itemCount="12" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
-

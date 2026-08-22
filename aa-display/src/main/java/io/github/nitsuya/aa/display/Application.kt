@@ -28,6 +28,10 @@ class Application: android.app.Application() {
     override fun onCreate() {
         super.onCreate()
         DynamicColors.applyToActivitiesIfAvailable(this)
+        // virtual display config reports uiMode=day regardless of system dark mode
+        androidx.appcompat.app.AppCompatDelegate.setDefaultNightMode(
+            androidx.appcompat.app.AppCompatDelegate.MODE_NIGHT_YES
+        )
         // ensure prefs are readable by system_server (XSharedPreferences) after updates
         tryOrNull {
             Shell.cmd(

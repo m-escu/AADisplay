@@ -1,7 +1,16 @@
 package io.github.nitsuya.aa.display.ui.aa.fragment
 
+import android.content.Intent
+import android.content.pm.LauncherApps
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import io.github.duzhaokun123.template.bases.BaseFragment
 import io.github.nitsuya.aa.display.CoreApi
 import io.github.nitsuya.aa.display.R
@@ -18,6 +27,17 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
     }
 
     override fun initViews() {
+        baseBinding.btnHome.setOnClickListener {
+            CoreApi.startLauncher()
+            AaDisplayActivityKt.hideRecentTask(parentFragmentManager)
+        }
+        baseBinding.btnClose.setOnClickListener {
+            AaDisplayActivityKt.hideRecentTask(parentFragmentManager)
+        }
+        baseBinding.rvAllApps.apply {
+            layoutManager = GridLayoutManager(context, 6)
+            adapter = AllAppsAdapter()
+        }
         baseBinding.rvRecentTaskLeft.apply {
             layoutManager = GridLayoutManager(context, 2)
             adapter = DisplayRecyclerViewAdapter(this){
