@@ -60,13 +60,16 @@ object AndroidAuoHook : BaseHook() {
                 }
                 val measureTimeMillis = measureTimeMillis {
                     hooks.forEach { h ->
-                        h.loadDexClass(bridge, lpparam)
+                        // one hook's dex lookup failing (AA version drift) must not abort the rest
+                        runCatching { h.loadDexClass(bridge, lpparam) }
+                            .onFailure { log(tagName, "loadDexClass failed: ${h.tagName}", it) }
                     }
                 }
                 log(tagName,"${lpparam.processName} load class measure ${measureTimeMillis}ms")
             }
             hooks.forEach { h ->
-                h.hook(configPreferences, lpparam)
+                runCatching { h.hook(configPreferences, lpparam) }
+                    .onFailure { log(tagName, "hook failed: ${h.tagName}", it) }
             }
         }
     }
