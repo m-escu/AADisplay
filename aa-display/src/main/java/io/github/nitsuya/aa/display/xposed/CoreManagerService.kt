@@ -176,7 +176,15 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
     }
 
     override fun touch(event: MotionEvent) {
-        mAaVirtualDisplayAdapter?.onTouch(event)
+        // A15+: INJECT_EVENTS check uses the binder calling uid, so run as system
+        val ident = Binder.clearCallingIdentity()
+        try {
+            mAaVirtualDisplayAdapter?.onTouch(event)
+        } catch (e: Throwable) {
+            log(TAG, "touch failed", e)
+        } finally {
+            Binder.restoreCallingIdentity(ident)
+        }
     }
 
 
