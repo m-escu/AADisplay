@@ -78,7 +78,8 @@ object AaUiHook: AaHook() {
         }
         layoutInfoConstructor = findConstructor(classes[0].name) {
             //int i, int i2, int i3, int i4, boolean z, boolean z2, jby jbyVar, boolean z3
-            parameterCount == 8
+            // AA >=17.3 appended isHeroLayout/isIrregularDisplay params; match prefix instead of exact count
+            parameterCount >= 8
             && parameterTypes[0] == Int::class.javaPrimitiveType       //layoutResourceId
             && parameterTypes[1] == Int::class.javaPrimitiveType       //displayWidthDp
             && parameterTypes[2] == Int::class.javaPrimitiveType       //displayHeightDp
