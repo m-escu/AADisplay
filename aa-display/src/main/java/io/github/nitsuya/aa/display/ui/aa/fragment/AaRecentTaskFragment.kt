@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.github.duzhaokun123.template.bases.BaseFragment
 import io.github.nitsuya.aa.display.CoreApi
+import io.github.nitsuya.aa.display.R
 import io.github.nitsuya.aa.display.databinding.FragmentAaRecentTaskBinding
 import io.github.nitsuya.aa.display.ui.aa.AaDisplayActivityKt
 import io.github.nitsuya.aa.display.ui.window.DisplayRecyclerViewAdapter
@@ -91,7 +92,7 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
     }
 
     private inner class AllAppsAdapter : RecyclerView.Adapter<AllAppsAdapter.ViewHolder>() {
-        private val apps = mutableListOf<LauncherApps.ActivityInfo>()
+        private val apps = mutableListOf<android.content.pm.LauncherApps.ActivityInfo>()
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val icon: ImageView = view.findViewById(android.R.id.icon)
@@ -141,7 +142,7 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
         fun refresh() {
             apps.clear()
             runCatching {
-                val la = requireContext().getSystemService(LauncherApps::class.java)
+                val la = requireContext().getSystemService(android.content.pm.LauncherApps::class.java)
                 apps.addAll(
                     la.getActivityList(null, Process.myUserHandle())
                         .sortedBy { it.label.toString().lowercase() }
