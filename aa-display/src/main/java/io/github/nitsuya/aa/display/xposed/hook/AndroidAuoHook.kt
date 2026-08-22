@@ -39,14 +39,14 @@ object AndroidAuoHook : BaseHook() {
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val processName = lpparam.processName
         var hooks = listOf(AaBasicsHook, AaSignatureHook, AaDpiHook, AaBtnEventHook, AaUiHook, AaPropsHook).filter { i -> i.isSupportProcess(processName) }
-        if(!AADisplayConfig.AaUiTweaks.get(configPreferences)){
-            hooks = hooks.filter { it != AaUiHook }
-            log(tagName,"AaUiTweaks disabled, skipping AaUiHook")
-        }
         if(hooks.isEmpty()) return
 
         val configPreferences = XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName)
         configPreferences.reload() // LSPosed loads this via its privileged service; canRead() is unreliable
+        if(!AADisplayConfig.AaUiTweaks.get(configPreferences)){
+            hooks = hooks.filter { it != AaUiHook }
+            log(tagName,"AaUiTweaks disabled, skipping AaUiHook")
+        }
 
         var onCreateApplication: XC_MethodHook.Unhook? = null
         onCreateApplication = findMethod(Instrumentation::class.java) {

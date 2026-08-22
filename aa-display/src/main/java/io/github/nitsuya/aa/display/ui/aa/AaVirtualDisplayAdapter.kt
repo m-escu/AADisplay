@@ -37,7 +37,7 @@ import io.github.nitsuya.template.bases.runMain
 
 class AaVirtualDisplayAdapter(
       private val context: Context
-    , private val config: XSharedPreferences?
+    , private val config: SharedPreferences?
     , private val onReady: (suspend AaVirtualDisplayAdapter.(it:AaVirtualDisplayAdapter) -> Unit)
 ) {
     companion object {
