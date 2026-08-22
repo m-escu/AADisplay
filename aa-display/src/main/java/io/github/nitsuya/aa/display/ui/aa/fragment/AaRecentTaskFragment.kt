@@ -1,7 +1,8 @@
 package io.github.nitsuya.aa.display.ui.aa.fragment
 
-import android.content.Intent
 import android.content.pm.LauncherApps
+import android.os.Process
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.github.duzhaokun123.template.bases.BaseFragment
 import io.github.nitsuya.aa.display.CoreApi
-import io.github.nitsuya.aa.display.R
 import io.github.nitsuya.aa.display.databinding.FragmentAaRecentTaskBinding
 import io.github.nitsuya.aa.display.ui.aa.AaDisplayActivityKt
 import io.github.nitsuya.aa.display.ui.window.DisplayRecyclerViewAdapter
@@ -84,8 +84,70 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
                     (baseBinding.rvRecentTaskRight.adapter as DisplayRecyclerViewAdapter)?.setItems(recentTask.mainDisplay)
                 }
             }
+            runMain {
+                (baseBinding.rvAllApps.adapter as AllAppsAdapter)?.refresh()
+            }
         }
     }
 
+    private inner class AllAppsAdapter : RecyclerView.Adapter<AllAppsAdapter.ViewHolder>() {
+        private val apps = mutableListOf<LauncherApps.ActivityInfo>()
 
+        inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+            val icon: ImageView = view.findViewById(android.R.id.icon)
+            val text: TextView = view.findViewById(android.R.id.text1)
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+            val ctx = parent.context
+            val view = LinearLayout(ctx).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER
+                val pad = (4 * resources.displayMetrics.density).toInt()
+                setPadding(pad, pad, pad, pad)
+                addView(ImageView(ctx).apply {
+                    id = android.R.id.icon
+                    layoutParams = LinearLayout.LayoutParams(
+                        (48 * resources.displayMetrics.density).toInt(),
+                        (48 * resources.displayMetrics.density).toInt()
+                    )
+                })
+                addView(TextView(ctx).apply {
+                    id = android.R.id.text1
+                    layoutParams = LinearLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
+                    textAlignment = View.TEXT_ALIGNMENT_CENTER
+                    setTextColor(android.graphics.Color.WHITE)
+                    textSize = 11f
+                    maxLines = 1
+                })
+            }
+            return ViewHolder(view)
+        }
+
+        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+            val activity = apps[position]
+            runCatching { holder.icon.setImageDrawable(activity.getIcon(0)) }
+            holder.text.text = activity.label
+            holder.itemView.setOnClickListener {
+                CoreApi.startActivity(activity.componentName.packageName, 0)
+                AaDisplayActivityKt.hideRecentTask(parentFragmentManager)
+            }
+        }
+
+        override fun getItemCount(): Int = apps.size
+
+        fun refresh() {
+            apps.clear()
+            runCatching {
+                val la = requireContext().getSystemService(LauncherApps::class.java)
+                apps.addAll(
+                    la.getActivityList(null, Process.myUserHandle())
+                        .sortedBy { it.label.toString().lowercase() }
+                )
+            }
+            notifyDataSetChanged()
+        }
+    }
 }
