@@ -1,7 +1,5 @@
 package io.github.nitsuya.aa.display.ui.aa.fragment
 
-import android.content.pm.LauncherApps
-import android.os.Process
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -91,8 +89,10 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
         }
     }
 
+    private data class AppItem(val packageName: String, val label: String, val icon: android.graphics.drawable.Drawable?)
+
     private inner class AllAppsAdapter : RecyclerView.Adapter<AllAppsAdapter.ViewHolder>() {
-        private val apps = mutableListOf<android.content.pm.LauncherApps.ActivityInfo>()
+        private val apps = mutableListOf<AppItem>()
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val icon: ImageView = view.findViewById(android.R.id.icon)
@@ -128,11 +128,11 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val activity = apps[position]
-            runCatching { holder.icon.setImageDrawable(activity.getIcon(0)) }
-            holder.text.text = activity.label
+            val app = apps[position]
+            holder.icon.setImageDrawable(app.icon)
+            holder.text.text = app.label
             holder.itemView.setOnClickListener {
-                CoreApi.startActivity(activity.componentName.packageName, 0)
+                CoreApi.startActivity(app.packageName, 0)
                 AaDisplayActivityKt.hideRecentTask(parentFragmentManager)
             }
         }
@@ -142,10 +142,13 @@ class AaRecentTaskFragment: BaseFragment<FragmentAaRecentTaskBinding>(FragmentAa
         fun refresh() {
             apps.clear()
             runCatching {
-                val la = requireContext().getSystemService(android.content.pm.LauncherApps::class.java)
+                val pm = requireContext().packageManager
+                val intent = android.content.Intent(android.content.Intent.ACTION_MAIN)
+                    .addCategory(android.content.Intent.CATEGORY_LAUNCHER)
                 apps.addAll(
-                    la.getActivityList(null, Process.myUserHandle())
-                        .sortedBy { it.label.toString().lowercase() }
+                    pm.queryIntentActivities(intent, 0)
+                        .map { AppItem(it.activityInfo.packageName, it.loadLabel(pm).toString(), runCatching { it.activityInfo.loadIcon(pm) }.getOrNull()) }
+                        .sortedBy { it.label.lowercase() }
                 )
             }
             notifyDataSetChanged()
