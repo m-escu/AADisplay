@@ -91,8 +91,10 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
                 listener.onAvailableDisplay(this.mDisplayId, false)
                 return@runMain
             }
+            log(TAG, "LauncherPackage=${AADisplayConfig.LauncherPackage.get(config)}")
             config?.apply {
                 reload()
+                log(TAG, "LauncherPackage=${AADisplayConfig.LauncherPackage.get(config)}")
                 if (BuildConfig.DEBUG) log(TAG, "config: ${this.all.map { "${it.key}=${it.value}[${it.value?.javaClass?.name}]" }.joinToString() }")
             }
             AaVirtualDisplayAdapter(systemContext, config){
