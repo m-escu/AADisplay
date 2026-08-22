@@ -125,6 +125,18 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        app:key="CategoryAaUiTweaks"
+        app:title="AA UI Tweaks"
+        app:iconSpaceReserved="false">
+        <rikka.material.preference.MaterialSwitchPreference
+            app:defaultValue="false"
+            app:key="AaUiTweaks"
+            app:title="Enable AA UI tweaks"
+            app:summary="Replaces AA's button bar/layout and enables auto-open. Turn OFF to keep Android Auto's native home screen and split-screen (maps + music)."
+            app:iconSpaceReserved="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         app:key="CategoryAndroidAuto"
         app:title="Android Auto Configuration"
         app:summary="[com.google.android."

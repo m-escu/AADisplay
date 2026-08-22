@@ -38,7 +38,11 @@ object AndroidAuoHook : BaseHook() {
     override val tagName: String = "AAD_AndroidAuoHook"
     override fun init(lpparam: XC_LoadPackage.LoadPackageParam) {
         val processName = lpparam.processName
-        val hooks = listOf(AaBasicsHook, AaSignatureHook, AaDpiHook, AaBtnEventHook, AaUiHook, AaPropsHook).filter { i -> i.isSupportProcess(processName) }
+        var hooks = listOf(AaBasicsHook, AaSignatureHook, AaDpiHook, AaBtnEventHook, AaUiHook, AaPropsHook).filter { i -> i.isSupportProcess(processName) }
+        if(!AADisplayConfig.AaUiTweaks.get(configPreferences)){
+            hooks = hooks.filter { it != AaUiHook }
+            log(tagName,"AaUiTweaks disabled, skipping AaUiHook")
+        }
         if(hooks.isEmpty()) return
 
         val configPreferences = XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName)

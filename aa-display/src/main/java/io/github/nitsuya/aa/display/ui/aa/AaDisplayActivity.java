@@ -15,6 +15,15 @@ import io.github.nitsuya.aa.display.R;
 import io.github.nitsuya.aa.display.databinding.ActivityAaDisplayBinding;
 
 public class AaDisplayActivity extends CarActivity {
+    @Override
+    protected void attachBaseContext(android.content.Context newBase) {
+        // virtual display config reports uiMode=day; force night resources
+        android.content.res.Configuration c = new android.content.res.Configuration();
+        c.uiMode = (c.uiMode & ~android.content.res.Configuration.UI_MODE_NIGHT_MASK)
+                | android.content.res.Configuration.UI_MODE_NIGHT_YES;
+        super.attachBaseContext(newBase.createConfigurationContext(c));
+    }
+
 
     private ActivityAaDisplayBinding mBinding;
 

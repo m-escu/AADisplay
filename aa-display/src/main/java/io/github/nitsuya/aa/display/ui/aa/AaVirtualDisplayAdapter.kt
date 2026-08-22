@@ -25,6 +25,7 @@ import io.github.nitsuya.aa.display.model.RecentTask
 import io.github.nitsuya.aa.display.model.RecentTaskInfo
 import io.github.nitsuya.aa.display.service.ShellManagerService
 import io.github.nitsuya.aa.display.util.AADisplayConfig
+import io.github.nitsuya.aa.display.util.MapSharedPreferences
 import io.github.nitsuya.aa.display.xposed.CoreManagerService
 import io.github.nitsuya.aa.display.xposed.IShellManager
 import io.github.nitsuya.aa.display.xposed.TipUtil
@@ -48,7 +49,7 @@ class AaVirtualDisplayAdapter(
         )
     }
 
-    private var mLauncherPackage = AADisplayConfig.LauncherPackage.get(CoreManagerService.config)
+    private var mLauncherPackage: String? = null
     private var mLauncherTaskId: Int? = null
     private val mTaskStackListener = TaskStackListener()
     var mDisplayId = Display.INVALID_DISPLAY
@@ -68,6 +69,16 @@ class AaVirtualDisplayAdapter(
             if(mDoInit) return
             mDoInit = !mDoInit
             mShellManager?.createVirtualDisplayBefore()
+            // pull real prefs from the app process before anything reads config
+            runCatching {
+                val bundle = mShellManager?.config
+                if (bundle != null) {
+                    CoreManagerService.appConfig = MapSharedPreferences(
+                        bundle.keySet().associateWith { bundle.getString(it) }
+                    )
+                }
+            }
+            mLauncherPackage = AADisplayConfig.LauncherPackage.get(CoreManagerService.config)
             runMain {
                onReady(this@AaVirtualDisplayAdapter)
             }

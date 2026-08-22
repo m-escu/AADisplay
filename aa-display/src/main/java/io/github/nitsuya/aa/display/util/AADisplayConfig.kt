@@ -15,6 +15,7 @@ sealed class AADisplayConfig<T>(val key: String) {
 
     object LauncherPackage: StringConfig("LauncherPackage", "com.jamal2367.minicarlauncher")
     object AutoOpen: BooleanConfig("AutoOpen", true)
+    object AaUiTweaks: BooleanConfig("AaUiTweaks", false)
     object VirtualDisplayDpi: IntConfig("VirtualDisplayDpi", 0)
     object AndroidAutoDpi: IntConfig("AndroidAutoDpi", 0)
     object DelayDestroyTime: IntConfig("DelayDestroyTime", 180)

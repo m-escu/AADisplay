@@ -212,7 +212,7 @@ object AaUiHook: AaHook() {
                 resIdLauncherAndDashboardIconContainerId
             )
             val bottomIds = arrayListOf(
-                createBtn(R.drawable.ic_aa_filter_none_44){
+                createBtn(R.drawable.ic_aa_apps_44){
                     val intentClick = Intent().apply {
                         action = AABroadcastConst.ACTION_SCREEN_CONTROL
                         putExtra(AABroadcastConst.EXTRA_ACTION, KeyEvent.KEYCODE_DEMO_APP_1)

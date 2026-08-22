@@ -3,6 +3,7 @@ package io.github.nitsuya.aa.display.xposed
 import android.annotation.SuppressLint
 import android.app.*
 import android.content.*
+import android.content.SharedPreferences
 import android.os.*
 import android.view.*
 import com.github.kyuubiran.ezxhelper.utils.*
@@ -38,14 +39,18 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
                 systemContextHost = value.createContext(value.params ?: ContextParams.Builder().build())
             }
 
-        val config: XSharedPreferences? by lazy {
-            // LSPosed overrides XSharedPreferences to load via its privileged service,
-            // so this works even with MODE_PRIVATE prefs; raw file.canRead() is always
-            // false cross-app under SELinux and must not be used as a gate.
+        // prefs delivered from the app process via ShellManagerService binder (reliable);
+        // XSharedPreferences is only a fallback (often empty under SELinux)
+        @JvmStatic var appConfig: SharedPreferences? = null
+
+        private val xspConfig: XSharedPreferences? by lazy {
             XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName).apply {
                 reload()
             }
         }
+
+        val config: SharedPreferences?
+            get() = appConfig ?: xspConfig
 
         private var mDisplayWindow: DisplayWindow? = null
         private var mAaVirtualDisplayAdapter: AaVirtualDisplayAdapter? = null
@@ -92,10 +97,8 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
                 return@runMain
             }
             log(TAG, "LauncherPackage=${AADisplayConfig.LauncherPackage.get(config)}")
-            config?.apply {
-                reload()
-                log(TAG, "LauncherPackage=${AADisplayConfig.LauncherPackage.get(config)}")
-                if (BuildConfig.DEBUG) log(TAG, "config: ${this.all.map { "${it.key}=${it.value}[${it.value?.javaClass?.name}]" }.joinToString() }")
+            if (BuildConfig.DEBUG) {
+                log(TAG, "config: ${config?.all?.map { "${it.key}=${it.value}" }?.joinToString()}")
             }
             AaVirtualDisplayAdapter(systemContext, config){
                 mAaVirtualDisplayAdapter = this

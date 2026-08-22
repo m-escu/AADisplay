@@ -32,40 +32,9 @@
             android:autoSizeTextType="uniform" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+    
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_recent_task_left"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/recent_task" />
-
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?colorOnPrimaryContainer" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_recent_task_right"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            app:layoutManager="LinearLayoutManager"
-            tools:listitem="@layout/recent_task" />
-    </androidx.appcompat.widget.LinearLayoutCompat>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="8dp"
-        android:paddingTop="8dp"
-        android:text="All apps"
+    <Space android:layout_width="match_parent" android:layout_height="8dp" />
         android:textColor="@android:color/white"
         android:textSize="14sp"
         android:textStyle="bold" />
