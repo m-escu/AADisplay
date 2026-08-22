@@ -42,10 +42,7 @@ object AndroidAuoHook : BaseHook() {
         if(hooks.isEmpty()) return
 
         val configPreferences = XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName)
-        if(!configPreferences.file.canRead()){
-            log(tagName,"load configPreferences fail")
-            return
-        }
+        configPreferences.reload() // LSPosed loads this via its privileged service; canRead() is unreliable
 
         var onCreateApplication: XC_MethodHook.Unhook? = null
         onCreateApplication = findMethod(Instrumentation::class.java) {

@@ -39,11 +39,11 @@ class CoreManagerService private constructor(): ICoreManager.Stub() {
             }
 
         val config: XSharedPreferences? by lazy {
-            XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName).let { config ->
-                if(!config.file.canRead())
-                    null
-                else
-                    config
+            // LSPosed overrides XSharedPreferences to load via its privileged service,
+            // so this works even with MODE_PRIVATE prefs; raw file.canRead() is always
+            // false cross-app under SELinux and must not be used as a gate.
+            XSharedPreferences(BuildConfig.APPLICATION_ID, AADisplayConfig.ConfigName).apply {
+                reload()
             }
         }
 
