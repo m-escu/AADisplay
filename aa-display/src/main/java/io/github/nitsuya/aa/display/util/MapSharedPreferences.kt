@@ -6,7 +6,7 @@ import android.content.SharedPreferences
  * Read-only SharedPreferences view over a map delivered via binder,
  * so system_server sees the module app's real (MODE_PRIVATE) prefs.
  */
-class MapSharedPreferences(private val values: Map<String, String>) : SharedPreferences {
+class MapSharedPreferences(private val values: Map<String, String?>) : SharedPreferences {
     override fun getAll(): Map<String, *> = values
     override fun getString(key: String, defValue: String?): String? = values[key] ?: defValue
     override fun getStringSet(key: String, defValues: Set<String>?): Set<String>? = defValues

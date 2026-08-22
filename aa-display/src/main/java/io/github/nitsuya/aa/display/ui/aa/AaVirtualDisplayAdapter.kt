@@ -6,6 +6,7 @@ import android.app.ActivityOptions
 import android.app.ITaskStackListener
 import android.content.ComponentName
 import android.content.Context
+import android.content.SharedPreferences
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.ActivityInfo

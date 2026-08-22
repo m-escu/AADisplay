@@ -10,13 +10,14 @@ import io.github.nitsuya.aa.display.util.AADisplayConfig
 import io.github.nitsuya.aa.display.xposed.IShellManager
 
 class ShellManagerService: Service() {
-    private lateinit var config: SharedPreferences
+    private lateinit var prefs: SharedPreferences
     private val stub: IShellManager.Stub = object: IShellManager.Stub(){
-        override fun createVirtualDisplayBefore(): Boolean = execConfigShell(AADisplayConfig.CreateVirtualDisplayBefore.get(config))
+        override fun createVirtualDisplayBefore(): Boolean = execConfigShell(AADisplayConfig.CreateVirtualDisplayBefore.get(prefs))
         override fun getConfig(): Bundle = Bundle().apply {
-            config.all.forEach { (k, v) -> putString(k, v.toString()) }
+            @Suppress("UNCHECKED_CAST")
+            prefs.all.forEach { (k, v) -> putString(k, v?.toString()) }
         }
-        override fun destroyVirtualDisplayAfter(): Boolean = execConfigShell(AADisplayConfig.DestroyVirtualDisplayAfter.get(config))
+        override fun destroyVirtualDisplayAfter(): Boolean = execConfigShell(AADisplayConfig.DestroyVirtualDisplayAfter.get(prefs))
 
         private fun execConfigShell(commands: Array<String>): Boolean {
             if(commands.isEmpty()) return true;
